@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .center {
+    @apply flex justify-center items-center;
+  }
+  .filled-btn {
+    @apply flex center gap-x-1.5 !text-white;
+  }
+  .outline-btn {
+    @apply !bg-transparent dark:!bg-transparent !border-slate-950 dark:!border-white center gap-x-1.5 hover:!bg-green-600 hover:dark:!bg-green-600 hover:!border-green-600 hover:!text-white hover:dark:!border-green-600 hover:dark:!text-white;
+  }
+}
