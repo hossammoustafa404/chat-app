@@ -11,7 +11,7 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "apps/chat-app-frontend/src/shared",
+    "components": "apps/chat-app-frontend/src/shared/shadcn-ui",
     "utils": "apps/chat-app-frontend/src/shared/lib/utils"
   }
 }

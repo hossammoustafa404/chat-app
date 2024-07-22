@@ -1,10 +1,11 @@
-import { Button } from '@/shared/ui/button';
+import SigninForm from '@/features/signin/ui/SigninForm';
 
 const Home = () => {
   return (
     <section>
-      <h1>Hello World!</h1>
-      <Button>Click Here</Button>
+      <div className="container min-h-screen flex justify-center items-center">
+        <SigninForm />
+      </div>
     </section>
   );
 };
