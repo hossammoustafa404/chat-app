@@ -53,7 +53,10 @@ const CustomInput: FC<CustomInputProps> = ({
                 type={showPassword ? 'text' : type}
                 placeholder={placeholder}
                 {...field}
-                className={cn(type === 'password' ? 'pr-8' : '')}
+                className={cn(
+                  type === 'password' ? 'pr-8' : '',
+                  'border-slate-400 focus:!ring-offset-0 focus:!ring-1'
+                )}
               />
               {type === 'password' && (
                 <Button
