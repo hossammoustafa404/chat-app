@@ -6,14 +6,16 @@ import { cn } from '../lib/utils';
 
 interface FormButtonProps extends ButtonProps {}
 
-const FormButton: FC<FormButtonProps> = ({ className, children, ...props }) => {
+const FormButton: FC<FormButtonProps> = ({
+  className,
+  children,
+  type = 'submit',
+  ...props
+}) => {
   return (
     <Button
-      type="submit"
-      className={cn(
-        'w-full mt-12 bg-violet-700 hover:bg-violet-700/80',
-        className
-      )}
+      type={type}
+      className={cn('w-full bg-violet-700 hover:bg-violet-700/80', className)}
       {...props}
     >
       {children}
