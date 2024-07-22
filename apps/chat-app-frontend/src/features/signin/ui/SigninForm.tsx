@@ -46,20 +46,20 @@ const SigninForm: FC<SigninFormProps> = ({ className, ...props }) => {
             control={form.control}
             type="password"
             name="password"
-            className="mt-8"
+            className="mt-6"
             // label="Password"
             placeholder="Enter your password"
           />
-          <FormButton type="submit">Signin</FormButton>
+          <FormButton className="mt-12">Sign in</FormButton>
         </form>
       </Form>
-      <div className="flex gap-1 items-center justify-center mt-4">
-        <p>Don't have an account?</p>
+      <div className="mt-4 text-sm">
+        Don't have an account?{' '}
         <Link
           href="/auth/signup"
           className={cn(buttonVariants({ variant: 'link' }), 'p-0')}
         >
-          Signup
+          Sign up
         </Link>
       </div>
     </div>
