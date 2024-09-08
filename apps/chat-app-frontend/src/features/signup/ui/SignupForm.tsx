@@ -1,95 +1,105 @@
 'use client';
 
-import { Form } from '@/shared/shadcn-ui/ui/form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { signupFormSchema } from '../lib';
+import { signupSchema } from '../model';
 import { z } from 'zod';
-import { CustomInput, FormButton } from '@/shared/ui';
+import { FormButton } from '@/shared/ui';
 import { cn } from '@/shared/lib/utils';
-import { FC, HTMLAttributes } from 'react';
+import { FC } from 'react';
 import Link from 'next/link';
-import { buttonVariants } from '@/shared/shadcn-ui/ui/button';
+import { useForm } from '@mantine/form';
+import { zodResolver } from 'mantine-form-zod-resolver';
+import { Box, Group, PasswordInput, Stack, TextInput } from '@mantine/core';
+import styles from './_styles.module.scss';
+import type { BoxProps } from '@mantine/core';
 
-interface SignupFormProps extends HTMLAttributes<HTMLDivElement> {}
+interface SignupFormProps extends BoxProps {}
 
-const SignupForm: FC<SignupFormProps> = ({ className }) => {
-  const form = useForm<z.infer<typeof signupFormSchema>>({
-    resolver: zodResolver(signupFormSchema),
-    defaultValues: {
+const SignupForm: FC<SignupFormProps> = ({ className, ...props }) => {
+  const form = useForm({
+    mode: 'uncontrolled',
+    name: 'signup-form',
+    initialValues: {
       firstName: '',
       lastName: '',
       email: '',
       username: '',
       password: '',
+      confirmPassword: '',
     },
+    validate: zodResolver(signupSchema),
   });
 
-  const onSubmit = () => {
-    console.log('Submitted');
+  const handleSubmit = (values: z.infer<typeof signupSchema>) => {
+    console.log({ values });
   };
 
   return (
-    <div
-      className={cn(
-        'basis-[35rem] p-12 rounded-md border-1 shadow-md bg-white',
-        className
-      )}
-    >
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          noValidate
-          className="flex flex-col gap-6"
-        >
-          <div className="flex flex-col gap-6 sm:flex-row sm:gap-4">
-            <CustomInput
-              type="text"
-              name="firstName"
-              control={form.control}
+    <Box className={cn(styles['signup-form-wrapper'], className)} {...props}>
+      <form
+        onSubmit={form.onSubmit(handleSubmit, (errors) => {
+          const firstErrorPath = Object.keys(errors)[0];
+          form.getInputNode(firstErrorPath)?.focus();
+        })}
+        noValidate
+        className={styles['signup-form']}
+      >
+        <Stack>
+          <Group className={styles['']} grow preventGrowOverflow={false}>
+            <TextInput
+              key={form.key('firstName')}
+              label="First Name"
+              withAsterisk
               placeholder="Enter your first name"
-              className="sm:basis-1/2"
+              {...form.getInputProps('firstName')}
             />
-            <CustomInput
-              type="text"
-              name="lastName"
-              control={form.control}
+            <TextInput
+              key={form.key('lastName')}
+              label="Last Name"
+              withAsterisk
               placeholder="Enter your last name"
-              className="sm:basis-1/2"
+              {...form.getInputProps('lastName')}
             />
-          </div>
+          </Group>
 
-          <CustomInput
-            type="email"
-            name="email"
-            control={form.control}
+          <TextInput
+            key={form.key('email')}
+            label="Email"
+            withAsterisk
             placeholder="Enter your email"
+            {...form.getInputProps('email')}
           />
-          <CustomInput
-            type="text"
-            name="username"
-            control={form.control}
+          <TextInput
+            key={form.key('username')}
+            label="Username"
             placeholder="Enter your username"
+            {...form.getInputProps('username')}
           />
-          <CustomInput
-            type="password"
-            name="password"
-            control={form.control}
+          <PasswordInput
+            key={form.key('password')}
+            label="Password"
+            withAsterisk
             placeholder="Enter your password"
+            {...form.getInputProps('password')}
           />
-          <FormButton className="mt-4">Sign up</FormButton>
-        </form>
-      </Form>
-      <div className="mt-4 text-center text-sm">
+          <PasswordInput
+            key={form.key('confirmPassword')}
+            label="Confirm Password"
+            withAsterisk
+            placeholder="Re-enter your password"
+            {...form.getInputProps('confirmPassword')}
+          />
+        </Stack>
+
+        <FormButton className={styles['submit-btn']}>Sign up</FormButton>
+      </form>
+
+      <footer>
         Already have an account?{' '}
-        <Link
-          href="/"
-          className={cn(buttonVariants({ variant: 'link' }), 'p-0')}
-        >
+        <Link href="/auth/signin" className={styles['signin-link']}>
           Sign in
         </Link>
-      </div>
-    </div>
+      </footer>
+    </Box>
   );
 };
 

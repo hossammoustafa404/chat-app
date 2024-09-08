@@ -1,2 +1,1 @@
-export { default as CustomInput } from './CustomInput';
-export { default as FormButton } from './FormButton';
+export { default as FormButton } from './form-button/FormButton';

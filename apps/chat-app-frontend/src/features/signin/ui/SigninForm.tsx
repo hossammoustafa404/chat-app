@@ -1,68 +1,68 @@
 'use client';
 
-import { Form } from '@/shared/shadcn-ui/ui/form';
-import CustomInput from '@/shared/ui/CustomInput';
-import { useForm } from 'react-hook-form';
+import { FC } from 'react';
 import { z } from 'zod';
-import { signinFormSchema } from '../lib';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { FC, HTMLAttributes } from 'react';
-import { cn } from '@/shared/lib/utils';
-import { Button, buttonVariants } from '@/shared/shadcn-ui/ui/button';
 import { FormButton } from '@/shared/ui';
 import Link from 'next/link';
+import { useForm } from '@mantine/form';
+import { Box, PasswordInput, Stack, TextInput } from '@mantine/core';
+import { zodResolver } from 'mantine-form-zod-resolver';
+import { signinSchema } from '../model';
+import styles from './_styles.module.scss';
+import type { BoxProps } from '@mantine/core';
 
-interface SigninFormProps extends HTMLAttributes<HTMLDivElement> {}
+interface SigninFormProps extends BoxProps {}
 
 const SigninForm: FC<SigninFormProps> = ({ className, ...props }) => {
-  const form = useForm<z.infer<typeof signinFormSchema>>({
-    resolver: zodResolver(signinFormSchema),
-    defaultValues: {
+  const form = useForm({
+    mode: 'uncontrolled',
+    name: 'signin-form',
+    initialValues: {
       email: '',
       password: '',
     },
+    validate: zodResolver(signinSchema),
   });
 
-  const onSubmit = () => {
-    console.log('Submitted');
+  const handleSubmit = (values: z.infer<typeof signinSchema>) => {
+    console.log({ values });
   };
+
   return (
-    <div
-      className={cn(
-        'basis-[28rem] p-12 rounded-md border-1 shadow-md bg-white',
-        className
-      )}
-    >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
-          <CustomInput
-            control={form.control}
-            type="email"
-            name="email"
-            // label="Email"
+    <Box className={styles['signin-form-wrapper']} {...props}>
+      <form
+        onSubmit={form.onSubmit(handleSubmit, (errors) => {
+          const firstErrorPath = Object.keys(errors)[0];
+          form.getInputNode(firstErrorPath)?.focus();
+        })}
+        className={styles['signin-form']}
+      >
+        <Stack className={styles['inputs-wrapper']}>
+          <TextInput
+            key={form.key('email')}
+            label="Email"
             placeholder="Enter your email"
+            withAsterisk
+            {...form.getInputProps('email')}
           />
-          <CustomInput
-            control={form.control}
-            type="password"
-            name="password"
-            className="mt-6"
-            // label="Password"
+          <PasswordInput
+            key={form.key('password')}
+            label="Password"
             placeholder="Enter your password"
+            withAsterisk
+            {...form.getInputProps('password')}
           />
-          <FormButton className="mt-12">Sign in</FormButton>
-        </form>
-      </Form>
-      <div className="mt-4 text-sm">
+        </Stack>
+        <FormButton className={styles['submit-btn']}>Sign in</FormButton>
+      </form>
+
+      <footer className={styles['']}>
         Don't have an account?{' '}
-        <Link
-          href="/auth/signup"
-          className={cn(buttonVariants({ variant: 'link' }), 'p-0')}
-        >
+        <Link href="/auth/signup" className={styles['signup-link']}>
           Sign up
         </Link>
-      </div>
-    </div>
+      </footer>
+    </Box>
   );
 };
 
