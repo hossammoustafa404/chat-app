@@ -1,0 +1,19 @@
+.signin-form-wrapper {
+  padding: 3.5rem;
+  border-radius: 0.3rem;
+  background-color: var(--mantine-color-white);
+
+  .submit-btn {
+    margin-top: var(--mantine-spacing-2xl);
+  }
+
+  footer {
+    margin-top: var(--mantine-spacing-md);
+    text-align: center;
+    font-size: var(--mantine-font-size-sm);
+
+    .signup-link {
+      text-decoration: underline;
+    }
+  }
+}
