@@ -1,1 +1,5 @@
-export { default } from '@/fsd-pages/home';
+const Home = () => {
+  return <div>Hello</div>;
+};
+
+export default Home;
