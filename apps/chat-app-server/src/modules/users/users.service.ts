@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities';
 import { Repository } from 'typeorm';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto } from './dtos';
 import * as bcrypt from 'bcrypt';
 import type { UUID } from 'crypto';
 
@@ -53,6 +53,14 @@ export class UsersService {
     return { user: createdUser };
   }
 
+  async findMany() {
+    // Find many users
+    const foundUsers = await this.userRepository.createQueryBuilder().getMany();
+
+    // Return the found users
+    return { users: foundUsers };
+  }
+
   async findOneBy(filter: Partial<User>) {
     // Find the user
     const foundUser = await this.userRepository
@@ -85,21 +93,7 @@ export class UsersService {
     return { user: foundUser };
   }
 
-  async findMany() {
-    // Find many users
-    const foundUsers = await this.userRepository.createQueryBuilder().getMany();
-
-    // Return the found users
-    return { foundUsers };
-  }
-
   async updateOneById(userId: UUID, updateUserDto: UpdateUserDto) {
-    const { password } = updateUserDto;
-    // Hash the password if it exists
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    updateUserDto = { ...updateUserDto, password: hashedPassword };
-
     // Update the user
     const {
       affected,
@@ -133,8 +127,5 @@ export class UsersService {
     if (!affected) {
       throw new NotFoundException('User does not exist');
     }
-
-    // Return true
-    return true;
   }
 }
