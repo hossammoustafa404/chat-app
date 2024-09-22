@@ -15,6 +15,7 @@ async function bootstrap() {
     })
   );
 
+
   const config = new DocumentBuilder()
     .setTitle('Chat App API')
     .setDescription('The chat app API v1 description')
