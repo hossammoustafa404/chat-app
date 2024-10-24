@@ -8,6 +8,7 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -15,10 +16,12 @@ import {
   ApiNotFoundResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import type { UUID } from 'crypto';
-import { UpdateUserDto } from './dtos';
+import { UpdateUserDto, UserDto } from './dtos';
+import type { EntityId } from '@/shared/entities';
+import { SerializeInterceptor } from '@/shared/interceptors';
 
 @ApiTags('Users')
+@UseInterceptors(new SerializeInterceptor(UserDto))
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -31,7 +34,7 @@ export class UsersController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @Get(':userId')
-  findOneById(@Param('userId', ParseUUIDPipe) userId: UUID) {
+  findOneById(@Param('userId', ParseUUIDPipe) userId: EntityId) {
     return this.usersService.findOneById(userId);
   }
 
@@ -39,7 +42,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @Patch(':userId')
   updateOneById(
-    @Param('userId', ParseUUIDPipe) userId: UUID,
+    @Param('userId', ParseUUIDPipe) userId: EntityId,
     @Body() updateUserDto: UpdateUserDto
   ) {
     return this.usersService.updateOneById(userId, updateUserDto);
@@ -49,7 +52,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @Delete(':userId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteOneById(@Param('userId', ParseUUIDPipe) userId: UUID) {
+  deleteOneById(@Param('userId', ParseUUIDPipe) userId: EntityId) {
     return this.usersService.deleteOneById(userId);
   }
 }
