@@ -6,11 +6,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export type EntityId = UUID;
-
 export abstract class CustomBaseEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: EntityId;
+  id: UUID;
 
   @CreateDateColumn()
   createdAt: Date;
