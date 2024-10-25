@@ -7,3 +7,5 @@ export const signinSchema = z.object({
     .email({ message: 'Invalid email format' }),
   password: z.string().min(8, 'Password must be at least 8 characters'),
 });
+
+export type SigninPayload = z.infer<typeof signinSchema>;

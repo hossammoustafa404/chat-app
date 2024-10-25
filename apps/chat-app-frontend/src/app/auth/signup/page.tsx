@@ -3,13 +3,14 @@
 import { Container } from '@mantine/core';
 import styles from './_styles.module.scss';
 
-import { signupSchema } from './_model';
+import { SignupPayload, signupSchema } from './_model';
 import { z } from 'zod';
 import { FormButton } from '@/components';
 import Link from 'next/link';
 import { useForm } from '@mantine/form';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { Box, Group, PasswordInput, Stack, TextInput } from '@mantine/core';
+import { signup } from '../auth-service';
 
 const Signup = () => {
   const form = useForm({
@@ -26,8 +27,9 @@ const Signup = () => {
     validate: zodResolver(signupSchema),
   });
 
-  const handleSubmit = (values: z.infer<typeof signupSchema>) => {
-    console.log({ values });
+  const handleSubmit = async (values: SignupPayload) => {
+    const { data } = await signup(values);
+    console.log(data);
   };
 
   return (
