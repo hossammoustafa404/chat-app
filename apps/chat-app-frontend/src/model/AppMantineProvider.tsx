@@ -2,7 +2,7 @@
 
 import { MantineProvider } from '@mantine/core';
 import React, { FC, ReactNode } from 'react';
-import { cssVariablesResolver, theme } from './theme';
+import { cssVariablesResolver, theme } from '../lib';
 
 interface Props {
   children: ReactNode;

@@ -14,11 +14,11 @@ const nextConfig = {
     svgr: false,
   },
   sassOptions: {
-    includePaths: [path.join(__dirname, 'src/fsd-app/styles')],
+    includePaths: [path.join(__dirname, 'src/styles')],
     prependData: `
-    @import "src/fsd-app/styles/variables";
-    @import "src/fsd-app/styles/functions";
-    @import "src/fsd-app/styles/mixins";
+    @import "src/styles/variables";
+    @import "src/styles/functions";
+    @import "src/styles/mixins";
     `,
   },
 };
