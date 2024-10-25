@@ -6,9 +6,9 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities';
 import { Repository } from 'typeorm';
-import { CreateUserDto, UpdateUserDto } from './dtos';
+import { UpdateUserDto } from './dtos';
 import * as bcrypt from 'bcrypt';
-import type { UUID } from 'crypto';
+import type { EntityId } from '@/shared/entities';
 
 @Injectable()
 export class UsersService {
@@ -16,8 +16,8 @@ export class UsersService {
     @InjectRepository(User) private readonly userRepository: Repository<User>
   ) {}
 
-  async createOne(createUserDto: CreateUserDto) {
-    const { email, username, password } = createUserDto;
+  async createOne(userData: Partial<User>) {
+    const { email, username, password } = userData;
 
     // Check that the email is unique
     const { user: existingUserWithEmail } = await this.findOneBy({ email });
@@ -37,16 +37,17 @@ export class UsersService {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    createUserDto = { ...createUserDto, password: hashedPassword };
+    userData = { ...userData, password: hashedPassword };
 
     // Create the user
-    const {
-      raw: [createdUser],
-    } = await this.userRepository
+    const createdUser = new User();
+    Object.assign(createdUser, userData);
+
+    // Insert the user into db
+    await this.userRepository
       .createQueryBuilder()
       .insert()
-      .values(createUserDto)
-      .returning('*')
+      .values(createdUser)
       .execute();
 
     // Return the created user
@@ -68,16 +69,11 @@ export class UsersService {
       .where(filter)
       .getOne();
 
-    // Throw a not found exception if the user does not exist
-    if (!foundUser) {
-      throw new NotFoundException('User does not exist');
-    }
-
     // Return the found user
     return { user: foundUser };
   }
 
-  async findOneById(userId: UUID) {
+  async findOneById(userId: EntityId) {
     // Find the user
     const foundUser = await this.userRepository
       .createQueryBuilder()
@@ -93,7 +89,7 @@ export class UsersService {
     return { user: foundUser };
   }
 
-  async updateOneById(userId: UUID, updateUserDto: UpdateUserDto) {
+  async updateOneById(userId: EntityId, updateUserDto: UpdateUserDto) {
     // Update the user
     const {
       affected,
@@ -115,7 +111,7 @@ export class UsersService {
     return { user: updatedUser };
   }
 
-  async deleteOneById(userId: UUID) {
+  async deleteOneById(userId: EntityId) {
     // Delete the user
     const { affected } = await this.userRepository
       .createQueryBuilder()
