@@ -1,4 +1,15 @@
-.signin-form-wrapper {
+.signup-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+
+  .container {
+    width: 40rem;
+    max-width: 100%;
+  }
+}
+
+.signup-form-wrapper {
   padding: 3.5rem;
   border-radius: 0.3rem;
   background-color: var(--mantine-color-white);
@@ -12,7 +23,7 @@
     text-align: center;
     font-size: var(--mantine-font-size-sm);
 
-    .signup-link {
+    .signin-link {
       text-decoration: underline;
     }
   }

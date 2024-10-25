@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { Button } from '@mantine/core';
 import type { ButtonProps, ElementProps } from '@mantine/core';
 import styles from './_styles.module.scss';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface FormButtonProps
   extends ButtonProps,
