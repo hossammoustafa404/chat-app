@@ -6,9 +6,10 @@ import Link from 'next/link';
 import { useForm } from '@mantine/form';
 import { Box, PasswordInput, Stack, TextInput } from '@mantine/core';
 import { zodResolver } from 'mantine-form-zod-resolver';
-import { signinSchema } from './_model';
+import { SigninPayload, signinSchema } from './_model';
 import styles from './_styles.module.scss';
 import { Container } from '@mantine/core';
+import { signin } from '../auth-service';
 
 const Signin = () => {
   const form = useForm({
@@ -21,8 +22,9 @@ const Signin = () => {
     validate: zodResolver(signinSchema),
   });
 
-  const handleSubmit = (values: z.infer<typeof signinSchema>) => {
-    console.log({ values });
+  const handleSubmit = async (values: SigninPayload) => {
+    const data = await signin(values);
+    console.log({ data });
   };
 
   return (

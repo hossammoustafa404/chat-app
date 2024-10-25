@@ -8,7 +8,6 @@ export class SerializeInterceptor implements NestInterceptor {
   intercept(ctx: ExecutionContext, handler: CallHandler<any>) {
     return handler.handle().pipe(
       map((data: any) => {
-        console.log({ data });
         return plainToInstance(this.dto, data);
       })
     );

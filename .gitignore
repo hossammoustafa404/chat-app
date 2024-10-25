@@ -46,4 +46,5 @@ Thumbs.db
 out
 
 # Env
-**/*.env
+.env
+.env.local
