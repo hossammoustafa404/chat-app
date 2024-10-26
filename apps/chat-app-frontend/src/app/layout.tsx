@@ -1,7 +1,7 @@
 import '../styles/_global.scss';
 import '@mantine/core/styles.css';
 
-import { AppMantineProvider } from '../model';
+import { AppMantineProvider, AppSessionProvider } from '../model';
 import { ColorSchemeScript, Stack } from '@mantine/core';
 import styles from './_styles.module.scss';
 
@@ -17,11 +17,13 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <ColorSchemeScript />
       </head>
       <body>
-        <AppMantineProvider>
-          <Stack mih="100vh">
-            <main className={styles['main-content']}>{children}</main>
-          </Stack>
-        </AppMantineProvider>
+        <AppSessionProvider>
+          <AppMantineProvider>
+            <Stack mih="100vh">
+              <main className={styles['main-content']}>{children}</main>
+            </Stack>
+          </AppMantineProvider>
+        </AppSessionProvider>
       </body>
     </html>
   );
