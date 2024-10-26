@@ -2,17 +2,21 @@
 
 import { Container } from '@mantine/core';
 import styles from './_styles.module.scss';
-
 import { SignupPayload, signupSchema } from './_model';
-import { z } from 'zod';
 import { FormButton } from '@/components';
 import Link from 'next/link';
 import { useForm } from '@mantine/form';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { Box, Group, PasswordInput, Stack, TextInput } from '@mantine/core';
 import { signup } from '../auth-service';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const Signup = () => {
+  const router = useRouter();
+  const session = useSession();
+
   const form = useForm({
     mode: 'uncontrolled',
     name: 'signup-form',
@@ -27,9 +31,15 @@ const Signup = () => {
     validate: zodResolver(signupSchema),
   });
 
+  useEffect(() => {
+    if (session.status === 'authenticated') {
+      router.replace('/');
+    }
+  }, [session]);
+
   const handleSubmit = async (values: SignupPayload) => {
-    const { data } = await signup(values);
-    console.log(data);
+    await signup(values);
+    signIn();
   };
 
   return (

@@ -14,6 +14,13 @@
   border-radius: 0.3rem;
   background-color: var(--mantine-color-white);
 
+  .err-msg {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    color: red;
+  }
+
   .submit-btn {
     margin-top: var(--mantine-spacing-2xl);
   }

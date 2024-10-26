@@ -1,17 +1,22 @@
 'use client';
 
-import { z } from 'zod';
 import { FormButton } from '@/components';
 import Link from 'next/link';
 import { useForm } from '@mantine/form';
-import { Box, PasswordInput, Stack, TextInput } from '@mantine/core';
+import { Box, PasswordInput, Stack, Text, TextInput } from '@mantine/core';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { SigninPayload, signinSchema } from './_model';
 import styles from './_styles.module.scss';
 import { Container } from '@mantine/core';
-import { signin } from '../auth-service';
+import { signIn, useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const Signin = () => {
+  const [errMsg, setErrMsg] = useState('');
+  const router = useRouter();
+  const session = useSession();
+
   const form = useForm({
     mode: 'uncontrolled',
     name: 'signin-form',
@@ -22,9 +27,28 @@ const Signin = () => {
     validate: zodResolver(signinSchema),
   });
 
+  useEffect(() => {
+    if (session.status === 'authenticated') {
+      router.replace('/');
+    }
+  }, [session]);
+
   const handleSubmit = async (values: SigninPayload) => {
-    const data = await signin(values);
-    console.log({ data });
+    const data = await signIn('credentials', {
+      ...values,
+      redirect: false,
+      callbackUrl: '/',
+    });
+
+    const { status, ok, url } = data || {};
+
+    if (status === 401) {
+      setErrMsg('Wrong Credentials');
+    }
+
+    if (ok && url) {
+      router.replace(url);
+    }
   };
 
   return (
@@ -38,6 +62,7 @@ const Signin = () => {
             })}
             className={styles['signin-form']}
           >
+            {errMsg && <Text className={styles['err-msg']}>{errMsg}</Text>}
             <Stack className={styles['inputs-wrapper']}>
               <TextInput
                 key={form.key('email')}

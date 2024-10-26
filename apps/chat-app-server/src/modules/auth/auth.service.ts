@@ -17,13 +17,8 @@ export class AuthService {
       registerDto
     );
 
-    // Generate the auth tokens
-    const { accessToken, refreshToken } = await this.genAuthTokens({
-      sub: createdUser.id,
-    });
-
     // Return the user and auth tokens
-    return { user: createdUser, accessToken, refreshToken };
+    return { user: createdUser };
   }
 
   async login(loginDto: LoginDto) {

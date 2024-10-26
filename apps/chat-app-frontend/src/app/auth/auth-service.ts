@@ -13,7 +13,19 @@ export const signup = (payload: SignupPayload) => {
 };
 
 export const signin = (payload: SigninPayload) => {
-  return makeRequest({
+  return makeRequest<{
+    user: {
+      id: string;
+      createdAt: string;
+      updatedAt: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      username: string;
+    };
+    accessToken: string;
+    refreshToken: string;
+  }>({
     isPrivate: false,
     method: 'post',
     endpoint: SIGNIN_ENDPOINT,
