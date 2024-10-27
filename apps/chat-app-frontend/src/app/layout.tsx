@@ -2,8 +2,8 @@ import '../styles/_global.scss';
 import '@mantine/core/styles.css';
 
 import { AppMantineProvider, AppSessionProvider } from '../model';
-import { ColorSchemeScript, Stack } from '@mantine/core';
-import styles from './_styles.module.scss';
+import { ColorSchemeScript } from '@mantine/core';
+import styles from './_layout-styles.module.scss';
 
 export const metadata = {
   title: 'Chat App',
@@ -16,12 +16,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <head>
         <ColorSchemeScript />
       </head>
-      <body>
+      <body className={styles['body']}>
         <AppSessionProvider>
           <AppMantineProvider>
-            <Stack mih="100vh">
-              <main className={styles['main-content']}>{children}</main>
-            </Stack>
+            <main className={styles['main']}>{children}</main>
           </AppMantineProvider>
         </AppSessionProvider>
       </body>

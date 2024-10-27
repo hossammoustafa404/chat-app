@@ -1,0 +1,28 @@
+.chat-nav {
+  background-color: black;
+  flex-basis: 36em;
+  display: flex;
+  flex-direction: column;
+
+  @include larger-than($mantine-breakpoint-xs) {
+    flex-basis: 250px;
+  }
+
+  @include larger-than($mantine-breakpoint-md) {
+    flex-basis: 300px;
+  }
+
+  @include larger-than($mantine-breakpoint-lg) {
+    flex-basis: 400px;
+  }
+
+  .header {
+    background-color: green;
+    height: 62px;
+  }
+
+  .chat-list {
+    background-color: darkmagenta;
+    flex: 1;
+  }
+}
