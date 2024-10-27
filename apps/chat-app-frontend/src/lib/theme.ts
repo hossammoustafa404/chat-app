@@ -9,7 +9,7 @@ export const cssVariablesResolver: CSSVariablesResolver = (theme) => ({
     '--mantine-spacing-2xl': '2.7rem',
   },
   light: {
-    '--mantine-color-body': '#7b2eda',
+    '--mantine-color-body': '#f6f6f6',
   },
   dark: {},
 });

@@ -1,0 +1,9 @@
+.welcome-section {
+  display: none;
+  background-color: indigo;
+  flex: 1;
+
+  @include larger-than($mantine-breakpoint-xs) {
+    display: block;
+  }
+}
