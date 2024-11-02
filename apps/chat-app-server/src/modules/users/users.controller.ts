@@ -13,28 +13,30 @@ import {
 import { UsersService } from './users.service';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiNotFoundResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { UpdateUserDto, UserDto } from './dtos';
-import type { EntityId } from '@/shared/entities';
 import { SerializeInterceptor } from '@/shared/interceptors';
+import { CurrentUser, User } from '@/shared/decorators';
 
 @ApiTags('Users')
+@ApiBearerAuth()
 @UseInterceptors(new SerializeInterceptor(UserDto))
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  findMany() {
+  findMany(@User() currentUser: CurrentUser) {
     return this.usersService.findMany();
   }
 
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @Get(':userId')
-  findOneById(@Param('userId', ParseUUIDPipe) userId: EntityId) {
+  findOneById(@Param('userId', ParseUUIDPipe) userId: string) {
     return this.usersService.findOneById(userId);
   }
 
@@ -42,7 +44,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @Patch(':userId')
   updateOneById(
-    @Param('userId', ParseUUIDPipe) userId: EntityId,
+    @Param('userId', ParseUUIDPipe) userId: string,
     @Body() updateUserDto: UpdateUserDto
   ) {
     return this.usersService.updateOneById(userId, updateUserDto);
@@ -52,7 +54,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @Delete(':userId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteOneById(@Param('userId', ParseUUIDPipe) userId: EntityId) {
+  deleteOneById(@Param('userId', ParseUUIDPipe) userId: string) {
     return this.usersService.deleteOneById(userId);
   }
 }

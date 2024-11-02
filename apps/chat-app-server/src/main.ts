@@ -1,4 +1,9 @@
-import { Logger, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Logger,
+  ValidationPipe,
+} from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -16,6 +21,15 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      exceptionFactory: (errors) => {
+        throw new BadRequestException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          errors: errors.map((err) => ({
+            field: err.property,
+            messages: Object.values(err.constraints),
+          })),
+        });
+      },
     })
   );
 
@@ -23,6 +37,7 @@ async function bootstrap() {
     .setTitle('Chat App API')
     .setDescription('The chat app API v1 description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

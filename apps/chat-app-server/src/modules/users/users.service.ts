@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -8,7 +9,6 @@ import { User } from './entities';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dtos';
 import * as bcrypt from 'bcrypt';
-import type { EntityId } from '@/shared/entities';
 
 @Injectable()
 export class UsersService {
@@ -18,11 +18,15 @@ export class UsersService {
 
   async createOne(userData: Partial<User>) {
     const { email, username, password } = userData;
+    const validationErrMessages = [];
 
     // Check that the email is unique
     const { user: existingUserWithEmail } = await this.findOneBy({ email });
     if (existingUserWithEmail) {
-      throw new ConflictException('Email is taken');
+      validationErrMessages.push({
+        message: ['Email is taken'],
+        path: 'email',
+      });
     }
 
     // Check that the username is unique
@@ -30,7 +34,14 @@ export class UsersService {
       username,
     });
     if (existingUserWithUsername) {
-      throw new ConflictException('Username is taken');
+      validationErrMessages.push({
+        message: ['Username is taken'],
+        path: 'username',
+      });
+    }
+
+    if (validationErrMessages.length) {
+      throw new BadRequestException(validationErrMessages);
     }
 
     // Hash the password
@@ -73,7 +84,7 @@ export class UsersService {
     return { user: foundUser };
   }
 
-  async findOneById(userId: EntityId) {
+  async findOneById(userId: string) {
     // Find the user
     const foundUser = await this.userRepository
       .createQueryBuilder()
@@ -89,7 +100,7 @@ export class UsersService {
     return { user: foundUser };
   }
 
-  async updateOneById(userId: EntityId, updateUserDto: UpdateUserDto) {
+  async updateOneById(userId: string, updateUserDto: UpdateUserDto) {
     // Update the user
     const {
       affected,
@@ -111,7 +122,7 @@ export class UsersService {
     return { user: updatedUser };
   }
 
-  async deleteOneById(userId: EntityId) {
+  async deleteOneById(userId: string) {
     // Delete the user
     const { affected } = await this.userRepository
       .createQueryBuilder()

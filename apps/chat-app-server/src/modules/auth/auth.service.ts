@@ -1,7 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginDto, RegisterDto } from './dtos';
-import type { EntityId } from '@/shared/entities';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 @Injectable()
@@ -49,7 +48,7 @@ export class AuthService {
     return { user: foundUser, accessToken, refreshToken };
   }
 
-  private async genAuthTokens(payload: { sub: EntityId }) {
+  private async genAuthTokens(payload: { sub: string }) {
     // Generate access token
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: process.env.ACCESS_TOKEN_SECRET,

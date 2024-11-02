@@ -1,4 +1,3 @@
-import type { UUID } from 'crypto';
 import {
   BaseEntity,
   PrimaryGeneratedColumn,
@@ -6,11 +5,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export type EntityId = UUID;
-
 export abstract class CustomBaseEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: EntityId;
+  id: string;
 
   @CreateDateColumn()
   createdAt: Date;

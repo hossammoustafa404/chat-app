@@ -1,3 +1,4 @@
+import { Public } from '@/shared/decorators';
 import { Controller, Get, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
@@ -5,6 +6,7 @@ import type { Response } from 'express';
 @ApiTags('Welcome')
 @Controller()
 export class AppController {
+  @Public()
   @Get()
   welcome(@Res() res: Response) {
     return res.send(
