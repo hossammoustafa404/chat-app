@@ -8,7 +8,7 @@ export const signupSchema = z
       .string()
       .min(1, { message: 'Email is required' })
       .email({ message: 'Invalid email format' }),
-    username: z.string().optional(),
+    username: z.string().min(1, 'Username is required'),
     password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z
       .string()

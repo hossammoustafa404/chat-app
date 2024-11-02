@@ -12,6 +12,7 @@ import { signup } from '../auth-service';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { AxiosError } from 'axios';
 
 const Signup = () => {
   const router = useRouter();
@@ -38,8 +39,18 @@ const Signup = () => {
   }, [session]);
 
   const handleSubmit = async (values: SignupPayload) => {
-    await signup(values);
-    signIn();
+    try {
+      await signup(values);
+      signIn();
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        const errors: any = {};
+        err.response?.data.errors.forEach((err: any) => {
+          errors[err.field] = err.messages.join(', ');
+        });
+        form.setErrors(errors);
+      }
+    }
   };
 
   return (
