@@ -1,3 +1,4 @@
+import { ConnectionRequest } from '@/modules/connection-requests/entities';
 import { User } from '@/modules/users/entities';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,7 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         port: +process.env.PG_PORT,
         username: process.env.PG_USER,
         password: process.env.PG_PASSWORD,
-        entities: [User],
+        entities: [User, ConnectionRequest],
         synchronize: process.env.NODE_ENV === 'development' ? true : false,
       }),
     }),
