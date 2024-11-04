@@ -1,6 +1,7 @@
 import { CustomBaseEntity } from '@/shared/entities';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { ConnectionRequest } from '@/modules/connection-requests/entities';
 
 @Entity()
 export class User extends CustomBaseEntity {
@@ -19,4 +20,16 @@ export class User extends CustomBaseEntity {
   @Exclude()
   @Column()
   password: string;
+
+  @OneToMany(
+    (type) => ConnectionRequest,
+    (connectionRequest) => connectionRequest.sender
+  )
+  sentConnectionRequests: ConnectionRequest[];
+
+  @OneToMany(
+    (type) => ConnectionRequest,
+    (connectionRequest) => connectionRequest.receiver
+  )
+  receivedConnectionRequests: ConnectionRequest[];
 }
